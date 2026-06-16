@@ -1,0 +1,17 @@
+CREATE TABLE TechEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    status TEXT NOT NULL,
+    firstUsed TEXT NOT NULL,
+    lastUsed TEXT
+);
+
+getAllTech:
+SELECT * FROM TechEntity ORDER BY firstUsed DESC;
+
+insertTech:
+INSERT OR REPLACE INTO TechEntity VALUES (?, ?, ?, ?, ?);
+
+updateTechStatus:
+UPDATE TechEntity SET status = :status WHERE id = :id;
+

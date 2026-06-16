@@ -1,0 +1,26 @@
+CREATE TABLE ProjectEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    status TEXT NOT NULL,
+    platforms TEXT NOT NULL,
+    techStack TEXT NOT NULL,
+    decisionNote TEXT,
+    githubUrl TEXT,
+    liveUrl TEXT,
+    startedAt INTEGER NOT NULL,
+    updatedAt INTEGER NOT NULL
+);
+
+getAllProjects:
+SELECT * FROM ProjectEntity ORDER BY updatedAt DESC;
+
+getProjectsByStatus:
+SELECT * FROM ProjectEntity WHERE status = :status ORDER BY updatedAt DESC;
+
+insertProject:
+INSERT OR REPLACE INTO ProjectEntity VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteProject:
+DELETE FROM ProjectEntity WHERE id = :id;
+

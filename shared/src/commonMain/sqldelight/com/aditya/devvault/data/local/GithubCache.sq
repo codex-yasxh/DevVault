@@ -1,0 +1,11 @@
+CREATE TABLE GithubCacheEntity (
+    username TEXT NOT NULL PRIMARY KEY,
+    signalJson TEXT NOT NULL,
+    fetchedAt INTEGER NOT NULL
+);
+
+getCachedSignal:
+SELECT * FROM GithubCacheEntity WHERE username = :username;
+
+upsertCache:
+INSERT OR REPLACE INTO GithubCacheEntity VALUES (?, ?, ?);
