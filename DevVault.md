@@ -1,7 +1,7 @@
 # DevVault — Full Product & Technical Document
 
 > **One-liner:** Your developer identity layer. Not a GitHub wrapper. Not a stats dashboard. The single place that answers: *"What kind of developer am I right now?"*
-
+ 
 ---
 
 ## 1. Product Identity
@@ -10,21 +10,18 @@
 - A developer self-awareness tool
 - Project memory + GitHub signal + stack evolution in one place
 - Built by a developer, for developers, during placement season
-
 ### What it is NOT
 - A GitHub stats clone (those exist, nobody cares)
 - A LeetCode tracker (scope creep, different product)
 - A to-do app with dev branding
 - A vanity metric dashboard
-
 ### The Core Problem
 Developers build things across months/years. GitHub shows commits. Nothing shows:
 - What you actually decided and why
 - How your stack evolved
 - What you've shipped vs what's dead
 - Who you are as a developer right now
-
-DevVault fills that gap.
+  DevVault fills that gap.
 
 ---
 
@@ -42,8 +39,7 @@ Each project entry has:
 - GitHub repo link (optional)
 - Play Store / live link (optional)
 - Start date + last updated
-
-This is local-first. User owns their data. No account needed.
+  This is local-first. User owns their data. No account needed.
 
 ---
 
@@ -55,18 +51,15 @@ What you fetch:
 - Commit activity (weekly breakdown for last 6 months)
 - Language usage across all repos (aggregate %)
 - Recent pushes (last 5 repos touched)
-
-What you surface:
+  What you surface:
 - **Consistency Score** — are you coding regularly or in bursts?
 - **Language Trend** — top 3 languages by actual usage, trending up/down
 - **Active vs Dead repos** — repos pushed in last 30 days vs not
 - **Most serious project** — repo with most commits + recent activity
-
-What you DON'T surface:
+  What you DON'T surface:
 - Total commit count (vanity)
 - Contribution heatmap (GitHub already has one)
 - Follower count (irrelevant)
-
 ---
 
 ### Pillar 3 — Stack Evolution
@@ -77,8 +70,7 @@ User manually tags technologies they've actually shipped with (not "learning"). 
 - Status: `COMFORTABLE` | `LEARNING` | `SHIPPED WITH` | `DROPPED`
 - First used (month/year)
 - Last used
-
-Over time this becomes a timeline of who you were technically at each stage.
+  Over time this becomes a timeline of who you were technically at each stage.
 
 ---
 
@@ -93,8 +85,7 @@ Layout:
 - Active Projects: Cards showing BUILDING projects only (max 3, tap to see all)
 - GitHub Pulse: Single line — "Last pushed 2 days ago · 4 repos active this month"
 - Quick Add button: Floating action button to add a new project entry
-
-No scrolling wall of stats. Clean, readable in 5 seconds.
+  No scrolling wall of stats. Clean, readable in 5 seconds.
 
 ---
 
@@ -105,8 +96,7 @@ Full project memory list.
 - Each card: Name, status badge, tech stack chips, last updated
 - Tap → Project Detail Screen
 - FAB → Add Project sheet
-
-**Add/Edit Project Sheet (bottom sheet):**
+  **Add/Edit Project Sheet (bottom sheet):**
 - Name (text field)
 - Description (text field, 1 line)
 - Status (segmented control)
@@ -115,7 +105,6 @@ Full project memory list.
 - Decision note (text field, optional)
 - GitHub URL (text field, optional)
 - Live URL (text field, optional)
-
 ---
 
 ### Screen 3 — GitHub
@@ -127,9 +116,8 @@ GitHub Signal screen.
 - Active repos section (pushed in last 30 days)
 - Language trend (this month vs 3 months ago)
 - Pull-to-refresh
-
-Empty state: "Add your GitHub username to see your signal"
-Error state: "Couldn't reach GitHub — cached data shown"
+  Empty state: "Add your GitHub username to see your signal"
+  Error state: "Couldn't reach GitHub — cached data shown"
 
 ---
 
@@ -141,8 +129,7 @@ Stack Evolution screen.
 - Each chip: Technology name + status color
 - Tap chip → edit status or remove
 - FAB → Add technology sheet
-
-**Visual:** Not a list. A horizontal scroll timeline by year. Past on left, present on right.
+  **Visual:** Not a list. A horizontal scroll timeline by year. Past on left, present on right.
 
 ---
 
@@ -153,7 +140,6 @@ Stack Evolution screen.
 - Export data (JSON dump of all projects + stack — user owns their data)
 - App version
 - GitHub repo link (open source? your call)
-
 ---
 
 ## 4. Architecture
@@ -216,7 +202,7 @@ DevVault/
 │       ├── main.kt
 │       └── DatabaseDriverFactory.jvm.kt
 ```
-
+ 
 ---
 
 ## 5. Tech Stack
@@ -239,7 +225,6 @@ DevVault/
 - Error handling at network layer (retry, cache fallback)
 - DataStore for preferences
 - Koin for dependency injection (optional but worth it)
-
 ---
 
 ## 6. Data Models
@@ -259,7 +244,7 @@ data class Project(
     val startedAt: Long,
     val updatedAt: Long
 )
-
+ 
 enum class ProjectStatus { BUILDING, SHIPPED, PAUSED, ABANDONED }
 enum class Platform { ANDROID, IOS, DESKTOP, WEB, BACKEND }
 ```
@@ -275,7 +260,7 @@ data class GitHubSignal(
     val activeRepoCountThisMonth: Int,
     val fetchedAt: Long
 )
-
+ 
 data class LanguageUsage(val language: String, val percentage: Float)
 data class RepoSummary(val name: String, val description: String?, val language: String?, val pushedAt: Long)
 ```
@@ -289,10 +274,10 @@ data class TechEntry(
     val firstUsedMonthYear: String,   // "2024-03"
     val lastUsedMonthYear: String?
 )
-
+ 
 enum class TechStatus { COMFORTABLE, LEARNING, SHIPPED_WITH, DROPPED }
 ```
-
+ 
 ---
 
 ## 7. GitHub API Layer
@@ -304,14 +289,14 @@ enum class TechStatus { COMFORTABLE, LEARNING, SHIPPED_WITH, DROPPED }
 ```
 GET /users/{username}
 → avatar_url, name, bio, public_repos, followers
-
+ 
 GET /users/{username}/repos?sort=pushed&per_page=50
 → name, description, language, stargazers_count, pushed_at, fork
-
+ 
 GET /users/{username}/stats/commit_activity
 → weekly commit counts for last 52 weeks
 Note: Returns 202 (computing) on first hit — retry after 1-2 seconds
-
+ 
 GET /users/{username}/languages (not a real endpoint)
 → You aggregate this: for each repo, GET /repos/{username}/{repo}/languages
    Returns { "Kotlin": 12400, "Swift": 3200 }
@@ -372,7 +357,7 @@ suspend fun aggregateLanguages(repos: List<RepoDto>): List<LanguageUsage> {
         .map { LanguageUsage(it.key, it.value / total * 100) }
 }
 ```
-
+ 
 ---
 
 ## 8. Developer Type Generator
@@ -390,12 +375,12 @@ fun generateDeveloperType(
         && it.status == TechStatus.SHIPPED_WITH }
     val shippedCount = projects.count { it.status == ProjectStatus.SHIPPED }
     val isActive = signal.lastPushedDaysAgo < 7
-
+ 
     return buildString {
         // Platform identity
         if (isKmp) append("KMP developer. ")
         else append("$topLang developer. ")
-
+ 
         // Activity signal
         if (isActive && signal.activeRepoCountThisMonth >= 2)
             append("Shipping actively. ")
@@ -403,7 +388,7 @@ fun generateDeveloperType(
             append("Building actively. ")
         else
             append("Between projects. ")
-
+ 
         // Experience signal
         when {
             shippedCount >= 5 -> append("$shippedCount shipped projects.")
@@ -416,7 +401,7 @@ fun generateDeveloperType(
 ```
 
 Example output: *"KMP developer. Shipping actively. 2 shipped. More in progress."*
-
+ 
 ---
 
 ## 9. SQLDelight Schema
@@ -436,20 +421,20 @@ CREATE TABLE ProjectEntity (
     startedAt INTEGER NOT NULL,
     updatedAt INTEGER NOT NULL
 );
-
+ 
 getAllProjects:
 SELECT * FROM ProjectEntity ORDER BY updatedAt DESC;
-
+ 
 getProjectsByStatus:
 SELECT * FROM ProjectEntity WHERE status = :status ORDER BY updatedAt DESC;
-
+ 
 insertProject:
 INSERT OR REPLACE INTO ProjectEntity VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-
+ 
 deleteProject:
 DELETE FROM ProjectEntity WHERE id = :id;
-
-
+ 
+ 
 -- TechStack.sq
 CREATE TABLE TechEntity (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -458,31 +443,31 @@ CREATE TABLE TechEntity (
     firstUsed TEXT NOT NULL,
     lastUsed TEXT
 );
-
+ 
 getAllTech:
 SELECT * FROM TechEntity ORDER BY firstUsed DESC;
-
+ 
 insertTech:
 INSERT OR REPLACE INTO TechEntity VALUES (?, ?, ?, ?, ?);
-
+ 
 updateTechStatus:
 UPDATE TechEntity SET status = :status WHERE id = :id;
-
-
+ 
+ 
 -- GithubCache.sq
 CREATE TABLE GithubCacheEntity (
     username TEXT NOT NULL PRIMARY KEY,
     signalJson TEXT NOT NULL,
     fetchedAt INTEGER NOT NULL
 );
-
+ 
 getCachedSignal:
 SELECT * FROM GithubCacheEntity WHERE username = :username;
-
+ 
 upsertCache:
 INSERT OR REPLACE INTO GithubCacheEntity VALUES (?, ?, ?);
 ```
-
+ 
 ---
 
 ## 10. Caching Strategy
@@ -493,7 +478,6 @@ GitHub data doesn't need to be real-time. Here's the rule:
 - On open: check cache age → if < 1hr, serve cache. If > 1hr, fetch fresh + update cache
 - On network error: serve stale cache + show "cached data" label
 - On no cache + no network: show empty state with retry button
-
 ```kotlin
 class GitHubRepository(
     private val api: GitHubApiClient,
@@ -504,11 +488,11 @@ class GitHubRepository(
         val cached = db.githubCacheQueries.getCachedSignal(username).executeAsOneOrNull()
         val isStale = cached == null ||
             System.currentTimeMillis() - cached.fetchedAt > 3_600_000L
-
+ 
         if (!isStale && cached != null) {
             return Result.success(Json.decodeFromString(cached.signalJson))
         }
-
+ 
         return try {
             val fresh = api.fetchSignal(username)
             db.githubCacheQueries.upsertCache(
@@ -522,203 +506,32 @@ class GitHubRepository(
     }
 }
 ```
-
+ 
 ---
 
-## 11. Manual KMP Project Setup (No Wizard)
+## 11. Day-by-Day Build Plan (15 days, 1hr/day)
 
-No wizard means you write the Gradle files yourself. Painful once, clean forever. Here's the exact structure.
-
-**`settings.gradle.kts`**
-```kotlin
-rootProject.name = "DevVault"
-include(":composeApp")
-
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-```
-
-**`build.gradle.kts` (root)**
-```kotlin
-plugins {
-    alias(libs.plugins.kotlinMultiplatform).apply(false)
-    alias(libs.plugins.androidApplication).apply(false)
-    alias(libs.plugins.jetbrainsCompose).apply(false)
-    alias(libs.plugins.compose.compiler).apply(false)
-    alias(libs.plugins.sqldelight).apply(false)
-}
-```
-
-**`gradle/libs.versions.toml`**
-```toml
-[versions]
-kotlin = "2.0.21"
-agp = "8.5.2"
-compose = "1.7.0"
-coroutines = "1.9.0"
-ktor = "3.0.0"
-sqldelight = "2.0.2"
-koin = "4.0.0"
-datastore = "1.1.1"
-serialization = "1.7.3"
-
-[libraries]
-# Compose
-compose-ui = { module = "androidx.compose.ui:ui" }
-compose-material3 = { module = "androidx.compose.material3:material3" }
-compose-foundation = { module = "androidx.compose.foundation:foundation" }
-
-# Ktor
-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
-ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
-
-# SQLDelight
-sqldelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
-sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
-
-# Koin
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
-
-# Coroutines
-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-
-# Serialization
-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
-
-# DataStore
-datastore-preferences = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
-
-[plugins]
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
-kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-```
-
-**`composeApp/build.gradle.kts`**
-```kotlin
-plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.sqldelight)
-    alias(libs.plugins.kotlinSerialization)
-}
-
-kotlin {
-    androidTarget {
-        compilations.all {
-            kotlinOptions { jvmTarget = "17" }
-        }
-    }
-
-    sourceSets {
-        androidMain.dependencies {
-            implementation(libs.ktor.client.android)
-            implementation(libs.sqldelight.android)
-            implementation(libs.coroutines.android)
-            implementation(libs.koin.android)
-        }
-
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.json)
-            implementation(libs.ktor.client.logging)
-
-            implementation(libs.sqldelight.coroutines)
-            implementation(libs.serialization.json)
-            implementation(libs.coroutines.core)
-            implementation(libs.datastore.preferences)
-
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-        }
-    }
-}
-
-android {
-    namespace = "com.yourname.devvault"
-    compileSdk = 35
-    defaultConfig {
-        applicationId = "com.yourname.devvault"
-        minSdk = 26
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-}
-
-sqldelight {
-    databases {
-        create("DevVaultDatabase") {
-            packageName.set("com.yourname.devvault.db")
-        }
-    }
-}
-```
-
-**Verification — run this before writing any app code:**
-```bash
-./gradlew :composeApp:assembleDebug
-```
-If it compiles clean, your manual setup is correct. If it fails here, fix it here — don't move to Day 2 with a broken build.
-
+| Day | What you build                                                        |
+|-----|-----------------------------------------------------------------------|
+| 1   | Project setup, Ktor dependency, Koin setup, DataStore                 |
+| 2   | SQLDelight schema, all 3 tables, DatabaseDriverFactory                |
+| 3   | GitHub API client, /users and /repos endpoints working                |
+| 4   | Language aggregation, commit activity fetch, GitHubSignal model built |
+| 5   | GitHubRepository with caching logic                                   |
+| 6   | GitHub screen UI — username input, signal cards                       |
+| 7   | ProjectRepository CRUD, all SQL queries wired                         |
+| 8   | Projects screen — list, filter tabs, status badges                    |
+| 9   | Add/Edit project bottom sheet, all fields working                     |
+| 10  | Stack screen — tech entries, timeline grouping by year                |
+| 11  | Home screen — Developer Type generator, active projects, GitHub pulse |
+| 12  | Navigation (bottom nav, back stack), screen wiring end-to-end         |
+| 13  | Empty states, error states, loading states — all screens              |
+| 14  | UI polish, app icon, typography consistency                           |
+| 15  | Internal testing track submission on Play Store                       |
+ 
 ---
 
-## 12. Day-by-Day Build Plan (15 days, 1hr/day)
-
-| Day | What you build |
-|-----|---------------|
-| 1 | Manual Gradle setup — settings.gradle.kts, root build, libs.versions.toml, composeApp build. Run `assembleDebug`. Don't move until it's green. |
-| 2 | SQLDelight schema (all 3 .sq files) + DatabaseDriverFactory expect/actual for androidMain |
-| 3 | Koin AppModule, DataStore prefs setup, App.kt entry point, MainActivity wired |
-| 4 | Ktor client setup + DTOs (RepoDto, UserDto, CommitActivityDto) + /users and /repos calls working |
-| 5 | Language aggregation logic + commit activity fetch + GitHubSignal model fully assembled |
-| 6 | GitHubRepository — cache check → fresh fetch → stale fallback → error state |
-| 7 | GitHub screen UI — username input, signal cards, loading + error states |
-| 8 | ProjectRepository CRUD + all SQL queries wired to domain models |
-| 9 | Projects screen — list, filter tabs, status badges, tap to detail |
-| 10 | Add/Edit project bottom sheet — all fields, validation, save + delete |
-| 11 | Stack screen — add/edit tech entries, grouped timeline by year |
-| 12 | Home screen — Developer Type generator, active projects strip, GitHub pulse line |
-| 13 | Bottom nav + full screen wiring + back stack navigation end-to-end |
-| 14 | All empty states, error states, loading skeletons — every screen covered |
-| 15 | UI polish, app icon (adaptive), Play Store internal testing track submitted |
-
----
-
-## 13. Play Store Checklist (before submission)
+## 12. Play Store Checklist (before submission)
 
 - [ ] App icon (512x512 + adaptive icon for Android)
 - [ ] Feature graphic (1024x500)
@@ -731,40 +544,40 @@ If it compiles clean, your manual setup is correct. If it fails here, fix it her
 - [ ] minSdk set appropriately (recommend 26+)
 - [ ] No crashes on cold start, rotation, back navigation
 - [ ] Test on at least 2 different screen sizes
-
-**Privacy policy note:** DevVault stores everything locally. No server. No account. That's actually your USP — put it in the description. "Your data never leaves your device."
+  **Privacy policy note:** DevVault stores everything locally. No server. No account. That's actually your USP — put it in the description. "Your data never leaves your device."
 
 ---
 
-## 14. What Makes This Portfolio-Worthy
+## 13. What Makes This Portfolio-Worthy
 
 By the time DevVault ships, you will have demonstrated:
 
-| Concept | Where it shows up |
-|---------|------------------|
-| Ktor client + error handling | GitHub API layer |
-| kotlinx.serialization | DTO parsing |
-| SQLDelight multiplatform | All 3 local tables |
-| Repository pattern | ProjectRepo, GitHubRepo, StackRepo |
-| StateFlow + ViewModel | All 5 screens |
-| Offline-first architecture | Cache strategy |
-| expect/actual | DatabaseDriverFactory |
-| Compose Multiplatform | Entire UI |
-| Koin DI | AppModule |
-| Real Play Store ship | The listing itself |
+| Concept                      | Where it shows up                  |
+|------------------------------|------------------------------------|
+| Ktor client + error handling | GitHub API layer                   |
+| kotlinx.serialization        | DTO parsing                        |
+| SQLDelight multiplatform     | All 3 local tables                 |
+| Repository pattern           | ProjectRepo, GitHubRepo, StackRepo |
+| StateFlow + ViewModel        | All 5 screens                      |
+| Offline-first architecture   | Cache strategy                     |
+| expect/actual                | DatabaseDriverFactory              |
+| Compose Multiplatform        | Entire UI                          |
+| Koin DI                      | AppModule                          |
+| Real Play Store ship         | The listing itself                 |
 
 That's a complete modern Android/KMP architecture in one app. With a real user problem. Shipped publicly.
-
+ 
 ---
 
-## 15. What to Say in Interviews
+## 14. What to Say in Interviews
 
 **"Tell me about a project you're proud of."**
 
 *"I built DevVault — a developer identity app on the Play Store. Built with Kotlin Multiplatform so the business logic runs on both Android and Desktop. It pulls GitHub data via Ktor, caches it locally with SQLDelight using an offline-first strategy, and generates a developer profile from real activity data. I built it because I needed it myself — no single place showed me what kind of developer I actually was. The architecture uses Repository pattern, StateFlow ViewModels, and Koin for DI. The interesting engineering problem was the language aggregation — GitHub doesn't give you totals, so I had to fetch per-repo language data, aggregate byte counts across repos, and calculate weighted percentages. Runs on Play Store."*
 
 That answer is 90 seconds. It covers architecture, real problem, engineering decisions, and shipping. No interviewer stops you there.
-
+ 
 ---
 
 *Document version: June 2026. Built for DevVault v1 MVP.*
+ 
