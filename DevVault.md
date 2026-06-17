@@ -207,24 +207,24 @@ DevVault/
 
 ## 5. Tech Stack
 
-| Tool | Purpose | Why |
-|------|---------|-----|
-| Kotlin Multiplatform | Shared logic | Your core skill, portfolio signal |
-| Compose Multiplatform | Shared UI | One UI codebase |
-| Ktor Client | GitHub API calls | KMP-native HTTP, coroutine-first |
-| SQLDelight | Local DB | KMP-native, typesafe, you've used it |
-| kotlinx.coroutines | Async | Already know it |
-| kotlinx.serialization | JSON parsing | Works with Ktor out of box |
-| DataStore (KMP) | Preferences | Username, name storage |
-| Koin | DI | Lightweight, KMP-compatible |
-| AndroidSqliteDriver | Android DB driver | Same as Burnout.kt |
+| Tool                  | Purpose           | Why                                  |
+|-----------------------|-------------------|--------------------------------------|
+| Kotlin Multiplatform  | Shared logic      | Your core skill, portfolio signal    |
+| Compose Multiplatform | Shared UI         | One UI codebase                      |
+| Ktor Client           | GitHub API calls  | KMP-native HTTP, coroutine-first     |
+| SQLDelight            | Local DB          | KMP-native, typesafe, you've used it |
+| kotlinx.coroutines    | Async             | Already know it                      |
+| kotlinx.serialization | JSON parsing      | Works with Ktor out of box           |
+| DataStore (KMP)       | Preferences       | Username, name storage               |
+| Koin                  | DI                | Lightweight, KMP-compatible          |
+| AndroidSqliteDriver   | Android DB driver | Same as Burnout.kt                   |
 
 **New things you'll learn in this project vs Burnout.kt:**
 - Ktor client setup + interceptors
 - kotlinx.serialization with real API responses
 - Error handling at network layer (retry, cache fallback)
 - DataStore for preferences
-- Koin for dependency injection (optional but worth it)
+- KOIN for dependency injection (optional but worth it)
 ---
 
 ## 6. Data Models
