@@ -12,3 +12,4 @@ data class RepoDto (
     @SerialName("pushed_at") val pushedAt: String,
     val fork : Boolean,
 )
+
