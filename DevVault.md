@@ -261,7 +261,7 @@ data class GitHubSignal(
     val fetchedAt: Long
 )
  
-data class LanguageUsage(val language: String, val percentage: Float)
+data class LanguageUsage(al language: String, val percentage: Float, val bytes: Long)
 data class RepoSummary(val name: String, val description: String?, val language: String?, val pushedAt: Long)
 ```
 
