@@ -54,6 +54,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.datastore.preferences)
             implementation(libs.okio)
+            implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
