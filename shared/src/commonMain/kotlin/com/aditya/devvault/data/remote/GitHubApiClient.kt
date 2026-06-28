@@ -11,6 +11,7 @@ import io.ktor.client.*
 import io.ktor.client.call.body
 import io.ktor.client.request.*
 import kotlinx.coroutines.delay
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
 
@@ -144,7 +145,7 @@ class GitHubApiClient(private val client: HttpClient) {
             username,
             repos
         )
-        val now = System.currentTimeMillis()
+        val now = Clock.System.now().toEpochMilliseconds()
         val activeRepos = repos.filter { repo ->
             val pushedMillis =
                 Instant.parse(repo.pushedAt)
@@ -178,7 +179,6 @@ class GitHubApiClient(private val client: HttpClient) {
             activeRepos = repoSummaries,
             activeRepoCountThisMonth = repoSummaries.size,
             lastPushedDaysAgo = lastPushedDaysAgo,
-            fetchedAt = now
         )
     }
 }
