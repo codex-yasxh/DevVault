@@ -55,7 +55,7 @@ class GitHubApiClient(private val client: HttpClient) {
                 if (attempt >= 3) {
                     throw Exception("GitHub stats not ready after $attempt attempts")
                 }
-                delay(1500)
+                delay(5000)
                 fetchCommitActivity(username, repo, attempt + 1)  // recursion
             }
             else -> {
@@ -172,6 +172,7 @@ class GitHubApiClient(private val client: HttpClient) {
                                 (1000L * 60 * 60 * 24)
                         ).toInt()
             }
+
         return GitHubSignal(
             username = username,
             topLanguages = topLanguages,

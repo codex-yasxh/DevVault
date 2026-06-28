@@ -21,8 +21,7 @@ class GitHubRepository(
         val isStale = cached == null || (now - cached.fetchedAt > 3_600_000L)
 
         // ---------- Fresh cache ----------
-            if (cached != null && !isStale) { //it's redundant in the place, but kotlin's smart-cast handles this
-                // fresh path — decode + return success, no network touch
+            if (cached != null && !isStale) {
                 val cacheDto = Json.decodeFromString<GitHubSignalCacheDto>(
                     cached.signalJson
                 )
@@ -30,7 +29,6 @@ class GitHubRepository(
             }
 
         return try {
-
             val fresh = api.buildGitHubSignal(username)
 
             val cacheDto = fresh.toCacheDto(
