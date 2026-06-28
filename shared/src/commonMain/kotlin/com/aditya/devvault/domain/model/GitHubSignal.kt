@@ -20,5 +20,4 @@ data class GitHubSignal(
     val activeRepos: List<RepoSummary>,
     val lastPushedDaysAgo: Int?,
     val activeRepoCountThisMonth: Int,
-    val fetchedAt: Long
 )
