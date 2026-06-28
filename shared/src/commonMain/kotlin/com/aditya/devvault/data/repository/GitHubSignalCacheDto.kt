@@ -1,6 +1,8 @@
 package com.aditya.devvault.data.repository
 
 import com.aditya.devvault.domain.model.GitHubSignal
+import com.aditya.devvault.domain.model.LanguageUsage
+import com.aditya.devvault.domain.model.RepoSummary
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,6 +21,17 @@ data class LanguageUsageCacheDto(val language: String, val bytes: Long, val perc
 
 @Serializable
 data class RepoSummaryCacheDto(val name : String, val description: String?, val language: String?, val pushedAt: Long)
+fun LanguageUsage.toCacheDto(): LanguageUsageCacheDto =
+    LanguageUsageCacheDto(language = language, bytes = bytes, percentage = percentage)
+
+fun LanguageUsageCacheDto.toDomain(): LanguageUsage =
+    LanguageUsage(language = language, bytes = bytes, percentage = percentage)
+
+fun RepoSummary.toCacheDto() : RepoSummaryCacheDto =
+    RepoSummaryCacheDto(name = name, description = description, language = language, pushedAt = pushedAt)
+
+fun RepoSummaryCacheDto.toDomain() : RepoSummary =
+    RepoSummary(name = name, description = description, language = language, pushedAt = pushedAt)
 
 // mapper: domain -> cache dto
 fun GitHubSignal.toCacheDto(fetchedAt: Long): GitHubSignalCacheDto {
@@ -42,6 +55,6 @@ fun GitHubSignalCacheDto.toDomain(): GitHubSignal {
         activeRepos = activeRepos.map { it.toDomain() },
         lastPushedDaysAgo = lastPushedDaysAgo,
         activeRepoCountThisMonth = activeRepoCountThisMonth,
-        fetchedAt = fetchedAt
     )
 }
+
