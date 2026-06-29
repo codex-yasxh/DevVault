@@ -11,29 +11,30 @@ class GitHubRepository(
     private val api: GitHubApiClient,
     private val db: DevVaultDatabase
 ) {
-    suspend fun getSignal(username: String): Result<GitHubSignal> {
+    companion object {
+        private const val TTL = 3_600_000L // 1 hour in milliseconds
+    }
+
+    suspend fun getSignal(username: String): Result<GitHubFetchResult> {
         val cached = db.githubCacheQueries.getCachedSignal(username).executeAsOneOrNull()
         val now = Clock.System.now().toEpochMilliseconds()
+        val isExpired = cached == null || (now - cached.fetchedAt > TTL)
 
-
-//        Condition A: there's no cache row, means fresh → cached == null
-//        Condition B: there IS a row, but it's too old → now - cached.fetchedAt > 3_600_000L
-        val isStale = cached == null || (now - cached.fetchedAt > 3_600_000L)
-
-        // ---------- Fresh cache ----------
-            if (cached != null && !isStale) {
-                val cacheDto = Json.decodeFromString<GitHubSignalCacheDto>(
-                    cached.signalJson
+        // ---------- Branch 2: cache hit, not expired — short-circuit ----------
+        if (cached != null && !isExpired) {
+            val cacheDto = Json.decodeFromString<GitHubSignalCacheDto>(cached.signalJson)
+            return Result.success(
+                GitHubFetchResult(
+                    cacheDto.toDomain(),
+                    isStale = false
                 )
-                return Result.success(cacheDto.toDomain())
-            }
+            )
+        }
 
         return try {
+            // ---------- Branch 1: fresh fetch succeeds ----------
             val fresh = api.buildGitHubSignal(username)
-
-            val cacheDto = fresh.toCacheDto(
-                fetchedAt = now
-            )
+            val cacheDto = fresh.toCacheDto(fetchedAt = now)
 
             db.githubCacheQueries.upsertCache(
                 username = username,
@@ -41,15 +42,22 @@ class GitHubRepository(
                 fetchedAt = now
             )
 
-            Result.success(fresh)
+            Result.success(GitHubFetchResult(fresh, isStale = false))
 
         } catch (e: Exception) {
             if (cached != null) {
+                // ---------- Branch 4: fetch failed, stale cache fallback ----------
                 val cachedDto = Json.decodeFromString<GitHubSignalCacheDto>(cached.signalJson)
-                Result.success(cachedDto.toDomain())
+                Result.success(
+                    GitHubFetchResult(
+                        cachedDto.toDomain(),
+                        isStale = true
+                    )
+                )
             } else {
+                // ---------- Branch 3: fetch failed, no cache at all ----------
                 Result.failure(e)
             }
         }
-        }
+    }
 }
