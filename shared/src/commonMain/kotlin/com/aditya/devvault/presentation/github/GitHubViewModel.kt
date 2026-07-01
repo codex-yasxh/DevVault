@@ -56,4 +56,29 @@ class GitHubViewModel(
             )
         }
     }
+
+
+
+    init{
+        viewModelScope.launch {
+            val savedUsername = prefs.data.map { it[USERNAME_KEY] }.firstOrNull()
+            if(savedUsername.isNullOrBlank()){
+                _uiState.value = GitHubUiState.Empty
+            } else {
+                loadSignal(savedUsername)
+            }
+        }
+    }
+
+    fun onUsernameSubmitted(username: String) {
+        if (username.isBlank() || username.contains(" ")) {
+            // local validation
+            return
+        }
+        viewModelScope.launch {
+            prefs.edit { it[USERNAME_KEY] = username }
+        }
+        loadSignal(username)
+    }
 }
+
