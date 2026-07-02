@@ -62,7 +62,7 @@ val appModule = module {
         DevVaultDatabase(get<DatabaseDriverFactory>().createDriver())
     }
 
-    single{
+    single {
         GitHubRepository(get(), get())
     }
 }

@@ -1,5 +1,9 @@
 package com.aditya.devvault.presentation.github
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aditya.devvault.data.repository.GitHubRepository
@@ -9,16 +13,23 @@ import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
 
 class GitHubViewModel(
-    private val repository: GitHubRepository
+    private val repository: GitHubRepository,
+    private val prefs: DataStore<Preferences>
 ): ViewModel(){
+
+    companion object{
+        val USERNAME_KEY = stringPreferencesKey("github_username")
+    }
     private val _uiState = MutableStateFlow<GitHubUiState>(GitHubUiState.Empty)
     val uiState: StateFlow<GitHubUiState> = _uiState.asStateFlow()
 
-    fun loadSignal(username : String){
+    private fun loadSignal(username : String){
         viewModelScope.launch {
             _uiState.value = GitHubUiState.Loading
 
@@ -79,6 +90,15 @@ class GitHubViewModel(
             prefs.edit { it[USERNAME_KEY] = username }
         }
         loadSignal(username)
+    }
+
+    fun onRefresh(){
+        viewModelScope.launch {
+            val savedUsername = prefs.data.map { it[USERNAME_KEY] }.firstOrNull()
+            if (!savedUsername.isNullOrBlank()){
+                loadSignal(savedUsername)
+            }
+        }
     }
 }
 
