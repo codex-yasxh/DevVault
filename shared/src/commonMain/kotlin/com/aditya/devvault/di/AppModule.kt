@@ -1,5 +1,3 @@
-
-
 package com.aditya.devvault.di
 
 import com.aditya.devvault.data.local.DatabaseDriverFactory
@@ -7,18 +5,16 @@ import com.aditya.devvault.data.local.DevVaultDatabase
 import com.aditya.devvault.data.local.createDataStore
 import com.aditya.devvault.data.remote.GitHubApiClient
 import com.aditya.devvault.data.repository.GitHubRepository
-
+import com.aditya.devvault.presentation.github.GitHubViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
-
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
-
 import kotlinx.serialization.json.Json
-
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -57,12 +53,12 @@ val appModule = module {
     }
 
     single {
-        // You'll need to provide DatabaseDriverFactory in your platform-specific setup
-        // or ensure it's available in the graph.
         DevVaultDatabase(get<DatabaseDriverFactory>().createDriver())
     }
 
     single {
         GitHubRepository(get(), get())
     }
+
+    viewModelOf(::GitHubViewModel)
 }

@@ -52,6 +52,7 @@ kotlin {
             implementation(libs.ktor.serialization.json)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
             implementation(libs.datastore.preferences)
             implementation(libs.okio)
             implementation(libs.kotlinx.datetime)
