@@ -24,3 +24,14 @@ INSERT OR REPLACE INTO ProjectEntity VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 deleteProject:
 DELETE FROM ProjectEntity WHERE id = :id;
 
+insertNewProject:
+INSERT INTO Pro jectEntity(name, description, status, platforms, techStack, decisionNote, githubUrl, liveUrl, startedAt, updatedAt)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateProject:
+UPDATE ProjectEntity SET
+    name = :name, description = :description, status = :status,
+    platforms = :platforms, techStack = :techStack, decisionNote = :decisionNote,
+    githubUrl = :githubUrl, liveUrl = :liveUrl, updatedAt = :updatedAt
+WHERE id = :id;
+
