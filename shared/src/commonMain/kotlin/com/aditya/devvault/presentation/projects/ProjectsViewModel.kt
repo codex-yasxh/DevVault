@@ -3,12 +3,14 @@ package com.aditya.devvault.presentation.projects
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aditya.devvault.data.repository.ProjectRepository
+import com.aditya.devvault.domain.model.Project
 import com.aditya.devvault.domain.model.ProjectStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class ProjectsViewModel(
     private val projectRepository: ProjectRepository
@@ -53,5 +55,11 @@ class ProjectsViewModel(
 
     fun onFilterSelected(filter: ProjectFilter) {
         _selectedFilter.value = filter
+    }
+
+    fun onSaveProject(project: Project) {
+        viewModelScope.launch {
+            projectRepository.insertProject(project)
+        }
     }
 }
