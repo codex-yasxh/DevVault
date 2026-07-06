@@ -25,7 +25,7 @@ deleteProject:
 DELETE FROM ProjectEntity WHERE id = :id;
 
 insertNewProject:
-INSERT INTO Pro jectEntity(name, description, status, platforms, techStack, decisionNote, githubUrl, liveUrl, startedAt, updatedAt)
+INSERT INTO ProjectEntity(name, description, status, platforms, techStack, decisionNote, githubUrl, liveUrl, startedAt, updatedAt)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 updateProject:
