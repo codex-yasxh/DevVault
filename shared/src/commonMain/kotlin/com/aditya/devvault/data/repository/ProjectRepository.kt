@@ -60,4 +60,41 @@ class ProjectRepository(private val db: DevVaultDatabase) {
             db.projectQueries.deleteProject(id)
         }
     }
+
+    suspend fun insertNewProject(project: Project) {
+        withContext(Dispatchers.IO) {
+            db.projectQueries
+                .insertNewProject(
+                    name = project.name,
+                    description = project.description,
+                    status = project.status.name,
+                    platforms = Json.encodeToString(project.platforms),
+                    techStack = Json.encodeToString(project.techStack),
+                    decisionNote = project.decisionNote,
+                    githubUrl = project.githubUrl,
+                    liveUrl = project.liveUrl,
+                    startedAt = project.startedAt,
+                    updatedAt = project.updatedAt
+                )
+        }
+    }
+
+    suspend fun updateProject(project: Project) {
+        withContext(Dispatchers.IO) {
+            db.projectQueries
+                .updateProject(
+                    id = project.id,
+                    name = project.name,
+                    description = project.description,
+                    status = project.status.name,
+                    platforms = Json.encodeToString(project.platforms),
+                    techStack = Json.encodeToString(project.techStack),
+                    decisionNote = project.decisionNote,
+                    githubUrl = project.githubUrl,
+                    liveUrl = project.liveUrl,
+                    updatedAt = project.updatedAt
+                )
+        }
+    }
+
 }
