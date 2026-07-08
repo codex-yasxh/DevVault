@@ -19,6 +19,29 @@ class ProjectsViewModel(
     private val _selectedFilter = MutableStateFlow(ProjectFilter.ALL)
     val selectedFilter: StateFlow<ProjectFilter> = _selectedFilter
 
+    private val _editingProject = MutableStateFlow<Project?>(null)
+    val editingProject: StateFlow<Project?> = _editingProject
+
+    private val _isSheetVisible = MutableStateFlow(false)
+    val isSheetVisible: StateFlow<Boolean> = _isSheetVisible
+
+
+    fun onAddProjectClicked() {
+        _editingProject.value = null
+        _isSheetVisible.value = true
+    }
+
+    fun onEditProjectClicked(project: Project) {
+        _editingProject.value = project
+        _isSheetVisible.value = true
+    }
+
+    fun onDismissSheet() {
+        _isSheetVisible.value = false
+        _editingProject.value = null
+    }
+
+
     val uiState: StateFlow<ProjectsUiState> = combine(
         projectRepository.getAllProjects(),
         _selectedFilter
@@ -59,7 +82,12 @@ class ProjectsViewModel(
 
     fun onSaveProject(project: Project) {
         viewModelScope.launch {
-            projectRepository.insertProject(project)
+            if (project.id == 0L) {
+                projectRepository.insertNewProject(project)
+            } else {
+                projectRepository.updateProject(project)
+            }
+            onDismissSheet()
         }
     }
 }

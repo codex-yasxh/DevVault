@@ -6,13 +6,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aditya.devvault.domain.model.Project
 import com.aditya.devvault.domain.model.ProjectStatus
@@ -22,20 +23,45 @@ fun ProjectsScreen(
     viewModel: ProjectsViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val isSheetVisible by viewModel.isSheetVisible.collectAsState()
+    val editingProject by viewModel.editingProject.collectAsState()
 
-    Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
-        when (val state = uiState) {
-            is ProjectsUiState.Empty -> {
-                EmptyState()
-            }
-            is ProjectsUiState.Success -> {
-                SuccessState(
-                    projects = state.projects,
-                    selectedFilter = state.selectedFilter,
-                    onFilterSelected = { viewModel.onFilterSelected(it) }
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = viewModel::onAddProjectClicked) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add project"
                 )
             }
         }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .statusBarsPadding()
+        ) {
+            when(val state = uiState) {
+                is ProjectsUiState.Empty -> EmptyState()
+                is ProjectsUiState.Success -> {
+                    SuccessState(
+                        projects = state.projects,
+                        selectedFilter = state.selectedFilter,
+                        onFilterSelected = { viewModel.onFilterSelected(it) },
+                        onProjectClick = { viewModel.onEditProjectClicked(it) }
+                    )
+                }
+            }
+        }
+    }
+
+    if (isSheetVisible) {
+        AddEditProjectSheet(
+            projectToEdit = editingProject,
+            onDismiss = { viewModel.onDismissSheet() },
+            onSave = { project -> viewModel.onSaveProject(project) }
+        )
     }
 }
 
@@ -64,20 +90,18 @@ private fun EmptyState() {
 private fun SuccessState(
     projects: List<Project>,
     selectedFilter: ProjectFilter,
-    onFilterSelected: (ProjectFilter) -> Unit
+    onFilterSelected: (ProjectFilter) -> Unit,
+    onProjectClick: (Project) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
-
-        // Filter tab row
+    Column(modifier = Modifier.fillMaxSize()) {
         FilterTabRow(
             selectedFilter = selectedFilter,
             onFilterSelected = onFilterSelected
         )
 
-        // List or "no matches for this filter" empty state
         if (projects.isEmpty()) {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.weight(1f).fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -88,12 +112,15 @@ private fun SuccessState(
             }
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.weight(1f).fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(projects, key = { it.id }) { project ->
-                    ProjectCard(project = project)
+                    ProjectCard(
+                        project = project,
+                        onClick = { onProjectClick(project) }
+                    )
                 }
             }
         }
@@ -121,10 +148,15 @@ private fun FilterTabRow(
 }
 
 @Composable
-private fun ProjectCard(project: Project) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+private fun ProjectCard(
+    project: Project,
+    onClick: () -> Unit
+) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
