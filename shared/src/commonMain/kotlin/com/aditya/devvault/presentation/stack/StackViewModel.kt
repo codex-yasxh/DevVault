@@ -6,6 +6,7 @@ import com.aditya.devvault.data.repository.StackRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
@@ -13,12 +14,13 @@ class StackViewModel(
     private val stackRepository: StackRepository
 ) : ViewModel() {
 
-    private val selectedFilter = MutableStateFlow(StackFilter.ALL)
+    private val _selectedFilter = MutableStateFlow(StackFilter.ALL)
+    val selectedFilter: StateFlow<StackFilter> = _selectedFilter.asStateFlow()
 
     val uiState: StateFlow<StackUiState> =
         combine(
             stackRepository.getAllTech(),
-            selectedFilter
+            _selectedFilter
         ) { techEntries, filter ->
 
             val filtered = filter.status?.let { status ->
@@ -49,6 +51,6 @@ class StackViewModel(
         )
 
     fun updateFilter(filter: StackFilter) {
-        selectedFilter.value = filter
+        _selectedFilter.value = filter
     }
 }
