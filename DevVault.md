@@ -1,6 +1,6 @@
 # DevVault — Full Product & Technical Document
 
-> **One-liner:** Your developer identity layer. Not a GitHub wrapper. Not a stats dashboard. The single place that answers: *"What kind of developer am I right now?"*
+> **One-liner:** Your developer identity layer. Not a GitHub wrapper. Not a stat's dashboard. The single place that answers: *"What kind of developer am I right now?"*
  
 ---
 
@@ -111,7 +111,7 @@ Full project memory list.
 GitHub Signal screen.
 
 - Username input at top (editable, saved to prefs)
-- Consistency Score card (calculated from weekly commit data)
+- Consistency Scorecard (calculated from weekly commit data)
 - Language breakdown (horizontal bar chart — top 5 languages by %)
 - Active repos section (pushed in last 30 days)
 - Language trend (this month vs 3 months ago)
