@@ -36,11 +36,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aditya.devvault.domain.model.GitHubSignal
+import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
 fun GitHubScreen(
-    viewModel: GitHubViewModel
+    viewModel: GitHubViewModel = koinViewModel()
 ){
     val uiState by viewModel.uiState.collectAsState()
     var usernameInput by remember { mutableStateOf("") }

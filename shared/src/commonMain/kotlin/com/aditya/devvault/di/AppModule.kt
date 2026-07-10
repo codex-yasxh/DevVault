@@ -10,6 +10,7 @@ import com.aditya.devvault.data.repository.StackRepository
 import com.aditya.devvault.presentation.github.GitHubViewModel
 import com.aditya.devvault.presentation.home.HomeViewModel
 import com.aditya.devvault.presentation.projects.ProjectsViewModel
+import com.aditya.devvault.presentation.stack.StackViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -75,4 +76,5 @@ val appModule = module {
     viewModelOf(::GitHubViewModel)
     viewModelOf(::ProjectsViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::StackViewModel)
 }

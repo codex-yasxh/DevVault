@@ -17,10 +17,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aditya.devvault.domain.model.Project
 import com.aditya.devvault.domain.model.ProjectStatus
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ProjectsScreen(
-    viewModel: ProjectsViewModel
+    viewModel: ProjectsViewModel = koinViewModel(),
+    onProjectClick: (Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isSheetVisible by viewModel.isSheetVisible.collectAsState()
@@ -49,7 +51,7 @@ fun ProjectsScreen(
                         projects = state.projects,
                         selectedFilter = state.selectedFilter,
                         onFilterSelected = { viewModel.onFilterSelected(it) },
-                        onProjectClick = { viewModel.onEditProjectClicked(it) }
+                        onProjectClick = { project -> onProjectClick(project.id) }
                     )
                 }
             }
