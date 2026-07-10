@@ -1,8 +1,13 @@
 package com.aditya.devvault.data.repository
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.aditya.devvault.data.local.DevVaultDatabase
 import com.aditya.devvault.data.remote.GitHubApiClient
 import com.aditya.devvault.domain.model.GitHubSignal
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 // + your db, api, domain imports
@@ -59,5 +64,16 @@ class GitHubRepository(
                 Result.failure(e)
             }
         }
+    }
+
+    fun getCachedSignalFlow(username: String): Flow<GitHubSignal?> {
+        return db.githubCacheQueries.getCachedSignal(username)
+            .asFlow()
+            .mapToOneOrNull(Dispatchers.Default) // Use Default in commonMain if IO isn't directly available or use a proper provider
+            .map { cached ->
+                cached?.let {
+                    Json.decodeFromString<GitHubSignalCacheDto>(it.signalJson).toDomain()
+                }
+            }
     }
 }
