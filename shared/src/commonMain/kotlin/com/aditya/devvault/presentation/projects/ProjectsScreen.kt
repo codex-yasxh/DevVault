@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aditya.devvault.domain.model.Project
 import com.aditya.devvault.domain.model.ProjectStatus
+import com.aditya.devvault.presentation.EmptyState
+import com.aditya.devvault.presentation.LoadingState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -45,7 +47,13 @@ fun ProjectsScreen(
                 .statusBarsPadding()
         ) {
             when(val state = uiState) {
-                is ProjectsUiState.Empty -> EmptyState()
+                ProjectsUiState.Loading -> LoadingState()
+                ProjectsUiState.Empty -> {
+                    EmptyState(
+                        title = "No projects yet",
+                        subtitle = "Tap + to add your first project"
+                    )
+                }
                 is ProjectsUiState.Success -> {
                     SuccessState(
                         projects = state.projects,
@@ -64,27 +72,6 @@ fun ProjectsScreen(
             onDismiss = { viewModel.onDismissSheet() },
             onSave = { project -> viewModel.onSaveProject(project) }
         )
-    }
-}
-
-@Composable
-private fun EmptyState() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = "No projects yet",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Tap + to add your first project",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
     }
 }
 

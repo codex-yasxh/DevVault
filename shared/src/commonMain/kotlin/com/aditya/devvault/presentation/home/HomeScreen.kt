@@ -1,5 +1,6 @@
 package com.aditya.devvault.presentation.home
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -52,26 +55,46 @@ fun HomeScreen(
         }
 
         Spacer(Modifier.height(12.dp))
-        Card {
-            Text(
-                state.developerType,
-                modifier = Modifier.padding(16.dp),
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
 
-        Spacer(Modifier.height(16.dp))
-        Text("Active Projects", style = MaterialTheme.typography.titleMedium)
-        Spacer(Modifier.height(8.dp))
-        state.activeProjects.forEach { project ->
-            Card(Modifier.padding(vertical = 4.dp)) {
-                Text(project.name, Modifier.padding(12.dp))
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
-        }
+        } else {
+            Card {
+                Text(
+                    state.developerType,
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
+            }
 
-        Spacer(Modifier.height(16.dp))
-        if (state.pulseText.isNotBlank()) {
-            Text(state.pulseText, style = MaterialTheme.typography.bodySmall)
+            Spacer(Modifier.height(16.dp))
+            Text("Active Projects", style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.height(8.dp))
+
+            if (state.activeProjects.isEmpty()) {
+                Text(
+                    text = "No active projects yet",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                state.activeProjects.forEach { project ->
+                    Card(Modifier.padding(vertical = 4.dp)) {
+                        Text(project.name, Modifier.padding(12.dp))
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+            if (state.pulseText.isNotBlank()) {
+                Text(state.pulseText, style = MaterialTheme.typography.bodySmall)
+            }
         }
     }
 }

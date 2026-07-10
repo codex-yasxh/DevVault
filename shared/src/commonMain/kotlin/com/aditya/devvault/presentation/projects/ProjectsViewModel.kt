@@ -6,10 +6,8 @@ import com.aditya.devvault.data.repository.ProjectRepository
 import com.aditya.devvault.domain.model.Project
 import com.aditya.devvault.domain.model.ProjectStatus
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ProjectsViewModel(
@@ -17,7 +15,6 @@ class ProjectsViewModel(
 ) : ViewModel() {
 
     private val _selectedFilter = MutableStateFlow(ProjectFilter.ALL)
-    val selectedFilter: StateFlow<ProjectFilter> = _selectedFilter
 
     private val _editingProject = MutableStateFlow<Project?>(null)
     val editingProject: StateFlow<Project?> = _editingProject
@@ -42,39 +39,41 @@ class ProjectsViewModel(
     }
 
 
-    val uiState: StateFlow<ProjectsUiState> = combine(
-        projectRepository.getAllProjects(),
-        _selectedFilter
-    ) { allProjects, filter ->
+    private val _uiState = MutableStateFlow<ProjectsUiState>(ProjectsUiState.Loading)
+    val uiState: StateFlow<ProjectsUiState> = _uiState
 
-        if (allProjects.isEmpty()) {
-            ProjectsUiState.Empty
-        } else {
-            val filteredProjects = when (filter) {
-                ProjectFilter.ALL -> allProjects
-                ProjectFilter.BUILDING ->
-                    allProjects.filter { it.status == ProjectStatus.BUILDING }
+    init {
+        viewModelScope.launch {
+            combine(
+                projectRepository.getAllProjects(),
+                _selectedFilter
+            ) { allProjects, filter ->
+                if (allProjects.isEmpty()) {
+                    ProjectsUiState.Empty
+                } else {
+                    val filteredProjects = when (filter) {
+                        ProjectFilter.ALL -> allProjects
+                        ProjectFilter.BUILDING ->
+                            allProjects.filter { it.status == ProjectStatus.BUILDING }
 
-                ProjectFilter.SHIPPED ->
-                    allProjects.filter { it.status == ProjectStatus.SHIPPED }
+                        ProjectFilter.SHIPPED ->
+                            allProjects.filter { it.status == ProjectStatus.SHIPPED }
 
-                ProjectFilter.PAUSED ->
-                    allProjects.filter { it.status == ProjectStatus.PAUSED }
+                        ProjectFilter.PAUSED ->
+                            allProjects.filter { it.status == ProjectStatus.PAUSED }
 
-                ProjectFilter.ABANDONED ->
-                    allProjects.filter { it.status == ProjectStatus.ABANDONED }
-            }
+                        ProjectFilter.ABANDONED ->
+                            allProjects.filter { it.status == ProjectStatus.ABANDONED }
+                    }
 
-            ProjectsUiState.Success(
-                projects = filteredProjects,
-                selectedFilter = filter
-            )
+                    ProjectsUiState.Success(
+                        projects = filteredProjects,
+                        selectedFilter = filter
+                    )
+                }
+            }.collect { _uiState.value = it }
         }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = ProjectsUiState.Empty
-    )
+    }
 
     fun onFilterSelected(filter: ProjectFilter) {
         _selectedFilter.value = filter

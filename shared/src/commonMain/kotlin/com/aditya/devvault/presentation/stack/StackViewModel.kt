@@ -4,11 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aditya.devvault.data.repository.StackRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class StackViewModel(
     private val stackRepository: StackRepository
@@ -17,38 +16,40 @@ class StackViewModel(
     private val _selectedFilter = MutableStateFlow(StackFilter.ALL)
     val selectedFilter: StateFlow<StackFilter> = _selectedFilter.asStateFlow()
 
-    val uiState: StateFlow<StackUiState> =
-        combine(
-            stackRepository.getAllTech(),
-            _selectedFilter
-        ) { techEntries, filter ->
+    private val _uiState = MutableStateFlow<StackUiState>(StackUiState.Loading)
+    val uiState: StateFlow<StackUiState> = _uiState
 
-            val filtered = filter.status?.let { status ->
-                techEntries.filter { it.status == status }
-            } ?: techEntries
+    init {
+        viewModelScope.launch {
+            combine(
+                stackRepository.getAllTech(),
+                _selectedFilter
+            ) { techEntries, filter ->
 
-            if (filtered.isEmpty()) {
-                StackUiState.Empty
-            } else {
-                val timeline = filtered
-                    .groupBy { it.firstUsedMonthYear.take(4) }
-                    .toSortedMap()
-                    .map { (year, technologies) ->
-                        TechTimelineGroup(
-                            year = year,
-                            technologies = technologies.sortedBy {
-                                it.firstUsedMonthYear
-                            }
-                        )
-                    }
+                val filtered = filter.status?.let { status ->
+                    techEntries.filter { it.status == status }
+                } ?: techEntries
 
-                StackUiState.Success(timeline)
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = StackUiState.Empty
-        )
+                if (filtered.isEmpty()) {
+                    StackUiState.Empty
+                } else {
+                    val timeline = filtered
+                        .groupBy { it.firstUsedMonthYear.take(4) }
+                        .toSortedMap()
+                        .map { (year, technologies) ->
+                            TechTimelineGroup(
+                                year = year,
+                                technologies = technologies.sortedBy {
+                                    it.firstUsedMonthYear
+                                }
+                            )
+                        }
+
+                    StackUiState.Success(timeline)
+                }
+            }.collect { _uiState.value = it }
+        }
+    }
 
     fun updateFilter(filter: StackFilter) {
         _selectedFilter.value = filter

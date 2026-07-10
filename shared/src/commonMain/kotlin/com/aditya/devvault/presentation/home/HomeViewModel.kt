@@ -41,8 +41,6 @@ class HomeViewModel(
 ) : ViewModel() {
 
     private val _activeUsername = MutableStateFlow("")
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _userName = MutableStateFlow("")
     val userName: StateFlow<String> = _userName.asStateFlow()
@@ -64,7 +62,6 @@ class HomeViewModel(
                 _activeUsername.value = savedUsername
                 gitHubRepository.getSignal(savedUsername)
             }
-            _isLoading.value = false
         }
     }
 
