@@ -1,19 +1,23 @@
 package com.aditya.devvault
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Layers
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +32,7 @@ import com.aditya.devvault.presentation.projects.ProjectsScreen
 import com.aditya.devvault.presentation.settings.SettingsScreen
 import com.aditya.devvault.presentation.stack.StackScreen
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
     MaterialTheme {
@@ -35,6 +40,10 @@ fun App() {
         var detailScreen by remember { mutableStateOf<Screen?>(null) }
 
         val currentScreen = detailScreen ?: selectedTab
+
+        BackHandler(enabled = detailScreen != null) {
+            detailScreen = null
+        }
 
         Scaffold(
             bottomBar = {
@@ -64,19 +73,15 @@ fun App() {
                             icon = { Icon(Icons.Default.Layers, contentDescription = null) },
                             label = { Text("Stack") }
                         )
-                        NavigationBarItem(
-                            selected = selectedTab is Screen.Settings,
-                            onClick = { selectedTab = Screen.Settings },
-                            icon = { Icon(Icons.Default.Settings, contentDescription = null) },
-                            label = { Text("Settings") }
-                        )
                     }
                 }
             }
         ) { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
                 when (currentScreen) {
-                    Screen.Home -> HomeScreen()
+                    Screen.Home -> HomeScreen(
+                        onSettingsClick = { detailScreen = Screen.Settings }
+                    )
                     Screen.Projects -> ProjectsScreen(
                         onProjectClick = { projectId ->
                             detailScreen = Screen.ProjectDetail(projectId)
@@ -84,7 +89,27 @@ fun App() {
                     )
                     Screen.GitHub -> GitHubScreen()
                     Screen.Stack -> StackScreen()
-                    Screen.Settings -> SettingsScreen()
+                    is Screen.Settings -> {
+                        Scaffold(
+                            topBar = {
+                                TopAppBar(
+                                    title = { Text("Settings") },
+                                    navigationIcon = {
+                                        IconButton(onClick = { detailScreen = null }) {
+                                            Icon(
+                                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                                contentDescription = "Back"
+                                            )
+                                        }
+                                    }
+                                )
+                            }
+                        ) { innerPadding ->
+                            Box(Modifier.padding(innerPadding)) {
+                                SettingsScreen()
+                            }
+                        }
+                    }
                     is Screen.ProjectDetail -> ProjectDetailScreen(
                         projectId = currentScreen.projectId,
                         onBack = { detailScreen = null }
