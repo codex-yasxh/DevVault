@@ -6,7 +6,9 @@ import com.aditya.devvault.data.local.createDataStore
 import com.aditya.devvault.data.remote.GitHubApiClient
 import com.aditya.devvault.data.repository.GitHubRepository
 import com.aditya.devvault.data.repository.ProjectRepository
+import com.aditya.devvault.data.repository.StackRepository
 import com.aditya.devvault.presentation.github.GitHubViewModel
+import com.aditya.devvault.presentation.home.HomeViewModel
 import com.aditya.devvault.presentation.projects.ProjectsViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
@@ -66,6 +68,11 @@ val appModule = module {
         ProjectRepository(get())
     }
 
+    single {
+        StackRepository(get())
+    }
+
     viewModelOf(::GitHubViewModel)
     viewModelOf(::ProjectsViewModel)
+    viewModelOf(::HomeViewModel)
 }
