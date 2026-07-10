@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.net.UnknownHostException
+import io.ktor.client.plugins.ResponseException
 
 class GitHubViewModel(
     private val repository: GitHubRepository,
@@ -45,18 +45,19 @@ class GitHubViewModel(
 
                 onFailure = { exception ->
 
-                    val message = when (exception) {
-                        is SocketTimeoutException ->
+                    val message = when {
+                        exception is SocketTimeoutException ->
                             "The request timed out."
 
-                        is UnknownHostException ->
-                            "No internet connection."
-
-                        is ClientRequestException ->
+                        exception is ClientRequestException ->
                             "GitHub user not found."
 
-                        is ServerResponseException ->
+                        exception is ServerResponseException ->
                             "GitHub is currently unavailable."
+
+                        exception.message?.contains("UnknownHost", ignoreCase = true) == true ||
+                        exception.message?.contains("connect", ignoreCase = true) == true ->
+                            "No internet connection."
 
                         else ->
                             "Something went wrong. Please try again."

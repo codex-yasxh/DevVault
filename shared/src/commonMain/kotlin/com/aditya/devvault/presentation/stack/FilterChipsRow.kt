@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.aditya.devvault.presentation.DevVaultSpacing
 
 @Composable
 fun FilterChipsRow(
@@ -18,8 +19,8 @@ fun FilterChipsRow(
 ) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        contentPadding = PaddingValues(horizontal = DevVaultSpacing.md, vertical = DevVaultSpacing.sm),
+        horizontalArrangement = Arrangement.spacedBy(DevVaultSpacing.sm)
     ) {
         items(StackFilter.entries) { filter ->
             FilterChip(

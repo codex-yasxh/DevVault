@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aditya.devvault.domain.model.Project
 import com.aditya.devvault.domain.model.ProjectStatus
+import com.aditya.devvault.presentation.DevVaultColors
+import com.aditya.devvault.presentation.DevVaultSpacing
 import com.aditya.devvault.presentation.EmptyState
 import com.aditya.devvault.presentation.LoadingState
 import org.koin.compose.viewmodel.koinViewModel
@@ -102,8 +104,8 @@ private fun SuccessState(
         } else {
             LazyColumn(
                 modifier = Modifier.weight(1f).fillMaxWidth(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                contentPadding = PaddingValues(DevVaultSpacing.md),
+                verticalArrangement = Arrangement.spacedBy(DevVaultSpacing.sm)
             ) {
                 items(projects, key = { it.id }) { project ->
                     ProjectCard(
@@ -123,8 +125,8 @@ private fun FilterTabRow(
 ) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        contentPadding = PaddingValues(horizontal = DevVaultSpacing.md, vertical = DevVaultSpacing.sm),
+        horizontalArrangement = Arrangement.spacedBy(DevVaultSpacing.sm)
     ) {
         items(ProjectFilter.entries) { filter ->
             FilterChip(
@@ -145,7 +147,7 @@ private fun ProjectCard(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(DevVaultSpacing.md)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -160,7 +162,7 @@ private fun ProjectCard(
             }
 
             if (project.description.isNotBlank()) {
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(DevVaultSpacing.xs))
                 Text(
                     text = project.description,
                     style = MaterialTheme.typography.bodyMedium,
@@ -169,8 +171,8 @@ private fun ProjectCard(
             }
 
             if (project.techStack.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Spacer(modifier = Modifier.height(DevVaultSpacing.sm))
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(DevVaultSpacing.sm)) {
                     items(project.techStack) { tech ->
                         AssistChip(
                             onClick = {},
@@ -186,16 +188,16 @@ private fun ProjectCard(
 @Composable
 private fun StatusBadge(status: ProjectStatus) {
     val (bgColor, textColor, label) = when (status) {
-        ProjectStatus.BUILDING -> Triple(Color(0xFF1E88E5), Color.White, "Building")
-        ProjectStatus.SHIPPED -> Triple(Color(0xFF43A047), Color.White, "Shipped")
-        ProjectStatus.PAUSED -> Triple(Color(0xFFFB8C00), Color.White, "Paused")
-        ProjectStatus.ABANDONED -> Triple(Color(0xFF757575), Color.White, "Abandoned")
+        ProjectStatus.BUILDING -> Triple(DevVaultColors.StatusBuilding, Color.White, "Building")
+        ProjectStatus.SHIPPED -> Triple(DevVaultColors.StatusShipped, Color.White, "Shipped")
+        ProjectStatus.PAUSED -> Triple(DevVaultColors.StatusPaused, Color.White, "Paused")
+        ProjectStatus.ABANDONED -> Triple(DevVaultColors.StatusAbandoned, Color.White, "Abandoned")
     }
 
     Box(
         modifier = Modifier
             .background(color = bgColor, shape = RoundedCornerShape(50))
-            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .padding(horizontal = DevVaultSpacing.sm, vertical = DevVaultSpacing.xs)
     ) {
         Text(
             text = label,

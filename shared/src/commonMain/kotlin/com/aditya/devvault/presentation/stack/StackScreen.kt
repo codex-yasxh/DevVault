@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.aditya.devvault.presentation.DevVaultSpacing
 import com.aditya.devvault.presentation.EmptyState
 import com.aditya.devvault.presentation.LoadingState
 import org.koin.compose.viewmodel.koinViewModel
@@ -53,7 +54,7 @@ fun StackScreen(
                 onFilterSelected = viewModel::updateFilter
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DevVaultSpacing.md))
 
             when (val state = uiState) {
 

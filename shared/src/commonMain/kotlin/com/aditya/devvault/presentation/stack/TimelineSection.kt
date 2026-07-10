@@ -8,22 +8,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
-import com.aditya.devvault.domain.model.TechEntry
+import com.aditya.devvault.presentation.DevVaultSpacing
 
 @Composable
 fun TimelineSection(
     timeline: List<TechTimelineGroup>
 ) {
     LazyColumn(
-        contentPadding = PaddingValues(vertical = 8.dp)
+        contentPadding = PaddingValues(vertical = DevVaultSpacing.md)
     ) {
         items(
             items = timeline,
@@ -33,13 +30,15 @@ fun TimelineSection(
             Column {
 
                 Text(
-                    text = group.year
+                    text = group.year,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(horizontal = DevVaultSpacing.md)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(DevVaultSpacing.sm))
 
                 LazyRow(
-                    contentPadding = PaddingValues(horizontal = 4.dp)
+                    contentPadding = PaddingValues(horizontal = DevVaultSpacing.md)
                 ) {
                     items(
                         items = group.technologies,
@@ -52,7 +51,7 @@ fun TimelineSection(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(DevVaultSpacing.md))
             }
         }
     }

@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.aditya.devvault.presentation.DevVaultSpacing
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -35,7 +36,7 @@ fun HomeScreen(
     val userName by viewModel.userName.collectAsState()
 
     Column(
-        Modifier.fillMaxSize().padding(horizontal = 16.dp).statusBarsPadding()
+        Modifier.fillMaxSize().padding(horizontal = DevVaultSpacing.md).statusBarsPadding()
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -54,7 +55,7 @@ fun HomeScreen(
             }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(DevVaultSpacing.md))
 
         if (state.isLoading) {
             Box(
@@ -67,15 +68,15 @@ fun HomeScreen(
             Card {
                 Text(
                     state.developerType,
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(DevVaultSpacing.md),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center
                 )
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(DevVaultSpacing.md))
             Text("Active Projects", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(DevVaultSpacing.sm))
 
             if (state.activeProjects.isEmpty()) {
                 Text(
@@ -85,13 +86,17 @@ fun HomeScreen(
                 )
             } else {
                 state.activeProjects.forEach { project ->
-                    Card(Modifier.padding(vertical = 4.dp)) {
-                        Text(project.name, Modifier.padding(12.dp))
+                    Card(Modifier.padding(vertical = DevVaultSpacing.xs)) {
+                        Text(
+                            project.name,
+                            modifier = Modifier.padding(DevVaultSpacing.md),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(DevVaultSpacing.md))
             if (state.pulseText.isNotBlank()) {
                 Text(state.pulseText, style = MaterialTheme.typography.bodySmall)
             }

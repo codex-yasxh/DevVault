@@ -2,11 +2,12 @@ package com.aditya.devvault.presentation.projects
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +20,7 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.aditya.devvault.domain.model.Platform
 import com.aditya.devvault.domain.model.Project
 import com.aditya.devvault.domain.model.ProjectStatus
+import com.aditya.devvault.presentation.DevVaultSpacing
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 
@@ -50,7 +53,7 @@ fun AddEditProjectSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(DevVaultSpacing.md)
                 .verticalScroll(rememberScrollState())
         ) {
             OutlinedTextField(
@@ -58,17 +61,24 @@ fun AddEditProjectSheet(
                 onValueChange = { newName ->
                     formState = formState.copy(name = newName)
                 },
-                label = { Text("Project Name") }
+                label = { Text("Project Name") },
+                modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(DevVaultSpacing.sm))
             OutlinedTextField(
                 value = formState.description,
                 onValueChange = { newDescription ->
                     formState = formState.copy(description = newDescription)
                 },
-                label = { Text("Project Description") }
+                label = { Text("Project Description") },
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Text("Status")
+            Text(
+                "Status",
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(top = DevVaultSpacing.sm)
+            )
 
             SingleChoiceSegmentedButtonRow {
                 ProjectStatus.entries.forEachIndexed { index, status ->
@@ -88,7 +98,11 @@ fun AddEditProjectSheet(
                 }
             }
 
-            Text("Platforms")
+            Text(
+                "Platforms",
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(top = DevVaultSpacing.sm)
+            )
 
             MultiChoiceSegmentedButtonRow {
                 Platform.entries.forEachIndexed { index, platform ->
@@ -122,6 +136,7 @@ fun AddEditProjectSheet(
                 mutableStateOf("")
             }
 
+            Spacer(modifier = Modifier.height(DevVaultSpacing.sm))
             OutlinedTextField(
                 value = techInput,
                 onValueChange = {
@@ -129,7 +144,8 @@ fun AddEditProjectSheet(
                 },
                 label = {
                     Text("Tech Stack")
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
 
             Button(
@@ -180,26 +196,32 @@ fun AddEditProjectSheet(
             }
 
 
+            Spacer(modifier = Modifier.height(DevVaultSpacing.sm))
             OutlinedTextField(
                 value = formState.decisionNote,
                 onValueChange = { newDecisionNote ->
                     formState = formState.copy(decisionNote = newDecisionNote)
                 },
-                label = { Text("Decision Note") }
+                label = { Text("Decision Note") },
+                modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(DevVaultSpacing.sm))
             OutlinedTextField(
                 value = formState.githubUrl,
                 onValueChange = { newGithubUrl ->
                     formState = formState.copy(githubUrl = newGithubUrl)
                 },
-                label = { Text("GitHub URL") }
+                label = { Text("GitHub URL") },
+                modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(DevVaultSpacing.sm))
             OutlinedTextField(
                 value = formState.liveUrl,
                 onValueChange = { newLiveUrl ->
                     formState = formState.copy(liveUrl = newLiveUrl)
                 },
-                label = { Text("Live URL") }
+                label = { Text("Live URL") },
+                modifier = Modifier.fillMaxWidth()
             )
 
 

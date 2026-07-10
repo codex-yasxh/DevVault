@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.aditya.devvault.presentation.DevVaultSpacing
 
 @Composable
 fun LoadingState() {
@@ -37,7 +38,7 @@ fun EmptyState(
                 text = title,
                 style = MaterialTheme.typography.titleMedium
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(DevVaultSpacing.xs))
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodyMedium,

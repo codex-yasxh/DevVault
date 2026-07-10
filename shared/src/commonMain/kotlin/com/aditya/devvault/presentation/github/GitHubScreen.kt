@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aditya.devvault.domain.model.GitHubSignal
+import com.aditya.devvault.presentation.DevVaultSpacing
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -59,13 +60,13 @@ fun GitHubScreen(
             value = usernameInput,
             onValueChange = { usernameInput = it },
             label = { Text("GitHub Username") },
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(DevVaultSpacing.md),
             singleLine = true,
             trailingIcon = {
                 Button(
                     onClick = { viewModel.onUsernameSubmitted(usernameInput) },
                     enabled = usernameInput.isNotBlank(),
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = DevVaultSpacing.sm)
                 ) {
                     Text("Fetch")
                 }
@@ -121,8 +122,11 @@ private fun LoadingState() {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             CircularProgressIndicator()
-            Spacer(modifier = Modifier.height(12.dp))
-            Text("Fetching your GitHub signal...")
+            Spacer(modifier = Modifier.height(DevVaultSpacing.md))
+            Text(
+                "Fetching your GitHub signal...",
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }
@@ -136,10 +140,11 @@ private fun ErrorState(message: String, onRetry: () -> Unit) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = message,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(DevVaultSpacing.md))
             Button(onClick = onRetry) {
                 Text("Retry")
             }
@@ -162,7 +167,7 @@ private fun SuccessState(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = DevVaultSpacing.md)
         ) {
 
             // Stale banner
@@ -175,11 +180,12 @@ private fun SuccessState(
                 ) {
                     Text(
                         text = "Offline. Showing cached data.",
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier.padding(DevVaultSpacing.md),
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onErrorContainer
                     )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(DevVaultSpacing.md))
             }
 
             // Consistency Score card
@@ -190,7 +196,7 @@ private fun SuccessState(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DevVaultSpacing.md))
 
             // Language breakdown card
             SignalCard(title = "Language Breakdown") {
@@ -198,30 +204,32 @@ private fun SuccessState(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = DevVaultSpacing.xs),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = lang.language,
-                            modifier = Modifier.width(80.dp)
+                            modifier = Modifier.width(80.dp),
+                            style = MaterialTheme.typography.bodyMedium
                         )
                         LinearProgressIndicator(
                             progress = { lang.percentage / 100f },
                             modifier = Modifier
                                 .weight(1f)
-                                .height(8.dp)
+                                .height(DevVaultSpacing.sm)
                                 .clip(RoundedCornerShape(4.dp))
                         )
                         Text(
                             text = "${lang.percentage.toInt()}%",
                             modifier = Modifier.width(40.dp),
+                            style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.End
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DevVaultSpacing.md))
 
             // Active repos card
             SignalCard(title = "Active Repos") {
@@ -229,12 +237,12 @@ private fun SuccessState(
                     Text(
                         text = "• ${repo.name}",
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(vertical = 4.dp)
+                        modifier = Modifier.padding(vertical = DevVaultSpacing.xs)
                     )
                 }
             }
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DevVaultSpacing.md))
         }
     }
 }
@@ -247,13 +255,13 @@ private fun SignalCard(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(DevVaultSpacing.md)) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(DevVaultSpacing.sm))
             content()
         }
     }
