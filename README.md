@@ -118,7 +118,7 @@ DevVault works without a GitHub token — it uses the public API which allows 60
 github.pat=ghp_your_token_here
 ```
 
-This gets read into `BuildConfig.GITHUB_PAT` and injected into the Ktor client via Koin.
+This gets read into `BuildConfig.GITHUB_PAT` and injected into the Ktor client via KOIN.
 
 ## Tech Stack Detail
 
