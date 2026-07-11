@@ -3,6 +3,7 @@ package com.aditya.devvault.presentation.stack
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aditya.devvault.data.repository.StackRepository
+import com.aditya.devvault.domain.model.TechEntry
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +19,9 @@ class StackViewModel(
 
     private val _uiState = MutableStateFlow<StackUiState>(StackUiState.Loading)
     val uiState: StateFlow<StackUiState> = _uiState
+
+    private val _isSheetVisible = MutableStateFlow(false)
+    val isSheetVisible: StateFlow<Boolean> = _isSheetVisible.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -53,5 +57,20 @@ class StackViewModel(
 
     fun updateFilter(filter: StackFilter) {
         _selectedFilter.value = filter
+    }
+
+    fun onAddTechClicked() {
+        _isSheetVisible.value = true
+    }
+
+    fun onDismissSheet() {
+        _isSheetVisible.value = false
+    }
+
+    fun onSaveTech(entry: TechEntry) {
+        viewModelScope.launch {
+            stackRepository.insertTech(entry)
+            _isSheetVisible.value = false
+        }
     }
 }

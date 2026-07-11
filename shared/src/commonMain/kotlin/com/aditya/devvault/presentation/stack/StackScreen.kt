@@ -27,13 +27,12 @@ fun StackScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedFilter by viewModel.selectedFilter.collectAsState()
+    val isSheetVisible by viewModel.isSheetVisible.collectAsState()
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    // TODO: Show Add Tech Bottom Sheet
-                }
+                onClick = viewModel::onAddTechClicked
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -74,5 +73,12 @@ fun StackScreen(
                 }
             }
         }
+    }
+
+    if (isSheetVisible) {
+        AddTechSheet(
+            onDismiss = { viewModel.onDismissSheet() },
+            onSave = { entry -> viewModel.onSaveTech(entry) }
+        )
     }
 }
