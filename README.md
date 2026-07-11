@@ -10,13 +10,13 @@ GitHub shows commits. Nothing shows what you decided, why you chose a stack, wha
 
 ## Screens
 
-| Screen | What it does |
-|--------|-------------|
-| **Home** | Auto-generated developer type string ("KMP developer. Shipping actively. 2 shipped."), active project cards, GitHub pulse line |
+| Screen       | What it does                                                                                                                               |
+|--------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| **Home**     | Auto-generated developer type string ("KMP developer. Shipping actively. 2 shipped."), active project cards, GitHub pulse line             |
 | **Projects** | Full project list with filter tabs (All / Building / Shipped / Paused / Abandoned), status badges, tech stack chips, add/edit bottom sheet |
-| **GitHub** | Consistency score (0-100), language breakdown bar chart, active repos, pull-to-refresh, offline cache banner |
-| **Stack** | Timeline view of technologies grouped by year, filterable by status (Comfortable / Learning / Shipped With / Dropped) |
-| **Settings** | Placeholder — wired into navigation, not yet implemented |
+| **GitHub**   | Consistency score (0-100), language breakdown bar chart, active repos, pull-to-refresh, offline cache banner                               |
+| **Stack**    | Timeline view of technologies grouped by year, filterable by status (Comfortable / Learning / Shipped With / Dropped)                      |
+| **Settings** | Placeholder — wired into navigation, not yet implemented                                                                                   |
 
 Project Detail is also a placeholder (navigated to from project cards, shows ID only).
 
@@ -32,17 +32,17 @@ The full product and technical document is in [`DevVault.md`](./DevVault.md).
 
 ## Tech Stack
 
-| Tool | Purpose |
-|------|---------|
-| [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html) | Shared business logic across Android and Desktop |
-| [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform/) | Shared UI |
-| [Ktor Client](https://ktor.io/docs/getting-started-ktor-client.html) | GitHub REST API calls |
-| [SQLDelight](https://sqldelight.github.io/sqldelight/) | Typesafe local database (multiplatform) |
-| [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) | JSON parsing for API responses and cache |
-| [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) | Structured concurrency + Flow |
-| [DataStore Preferences](https://developer.android.com/topic/libraries/architecture/datastore) | Key-value storage (username, display name) |
-| [Koin](https://insert-koin.io/) | Dependency injection |
-| [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime) | Epoch/time parsing for GitHub timestamps |
+| Tool                                                                                          | Purpose                                          |
+|-----------------------------------------------------------------------------------------------|--------------------------------------------------|
+| [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html)                        | Shared business logic across Android and Desktop |
+| [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform/)                     | Shared UI                                        |
+| [Ktor Client](https://ktor.io/docs/getting-started-ktor-client.html)                          | GitHub REST API calls                            |
+| [SQLDelight](https://sqldelight.github.io/sqldelight/)                                        | Typesafe local database (multiplatform)          |
+| [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization)                      | JSON parsing for API responses and cache         |
+| [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)                            | Structured concurrency + Flow                    |
+| [DataStore Preferences](https://developer.android.com/topic/libraries/architecture/datastore) | Key-value storage (username, display name)       |
+| [Koin](https://insert-koin.io/)                                                               | Dependency injection                             |
+| [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)                                | Epoch/time parsing for GitHub timestamps         |
 
 ## Architecture
 
